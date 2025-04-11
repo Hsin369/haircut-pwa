@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>髮型資料庫｜Web App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#121212" />
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      background-color: #121212;
+      color: #E0E0E0;
+      padding: 20px;
+      margin: 0;
+    }
+    h1 {
+      font-size: 24px;
+      color: #FADADD;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    .filter-btn {
+      background-color: #4A4E69;
+      color: #E0E0E0;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .filter-btn.active {
+      background-color: #FADADD;
+      color: #121212;
+    }
+    .sort-bar {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .sort-select {
+      padding: 6px 12px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: none;
+    }
+    .card {
+      background-color: #1E1E1E;
+      border-left: 5px solid #4A4E69;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .card h2 {
+      font-size: 18px;
+      color: #FADADD;
+      margin: 0 0 10px;
+    }
+    .text {
+      margin-bottom: 6px;
+    }
+    .label {
+      color: #AAAAAA;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>✂️ 髮型資料庫</h1>
+
+<div class="filter-bar">
+  <button class="filter-btn" onclick="toggleFilter(this, '教學用')">教學用</button>
+  <button class="filter-btn" onclick="toggleFilter(this, 'Q版公仔')">Q版公仔</button>
+  <button class="filter-btn" onclick="toggleFilter(this, '女仕')">女仕</button>
+</div>
+
+<div class="sort-bar">
+  <label for="sort" class="label">排序：</label>
+  <select class="sort-select" id="sort" onchange="sortCards()">
+    <option value="desc">由近到遠</option>
+    <option value="asc">由遠到近</option>
+  </select>
+</div>
+
+<div id="cardContainer">
+  <div class="card" data-category="女仕" data-date="2024-11-15">
+    <h2>森林層次剪</h2>
+    <div class="text"><span class="label">分類：</span>女仕</div>
+    <div class="text"><span class="label">完成日期：</span>2024-11-15</div>
+  </div>
+
+  <div class="card" data-category="Q版公仔" data-date="2025-01-05">
+    <h2>公仔短髮</h2>
+    <div class="text"><span class="label">分類：</span>Q版公仔</div>
+    <div class="text"><span class="label">完成日期：</span>2025-01-05</div>
+  </div>
+
+  <div class="card" data-category="教學用" data-date="2025-03-20">
+    <h2>蜂鳥波浪中長</h2>
+    <div class="text"><span class="label">分類：</span>教學用</div>
+    <div class="text"><span class="label">完成日期：</span>2025-03-20</div>
+  </div>
+</div>
+
+<script>
+  let activeFilters = [];
+
+  function toggleFilter(btn, category) {
+    btn.classList.toggle('active');
+    if (activeFilters.includes(category)) {
+      activeFilters = activeFilters.filter(c => c !== category);
+    } else {
+      activeFilters.push(category);
+    }
+    filterAndSortCards();
+  }
+
+  function sortCards() {
+    filterAndSortCards();
+  }
+
+  function filterAndSortCards() {
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const container = document.getElementById("cardContainer");
+    const sortOrder = document.getElementById("sort").value;
+
+    // Sort cards
+    cards.sort((a, b) => {
+      const dateA = new Date(a.dataset.date);
+      const dateB = new Date(b.dataset.date);
+      return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    });
+
+    // Clear and re-add
+    container.innerHTML = '';
+    cards.forEach(card => {
+      const cardCategory = card.getAttribute("data-category");
+      if (activeFilters.length === 0 || activeFilters.includes(cardCategory)) {
+        container.appendChild(card);
+        card.style.display = "block";
+      } else {
+        card.style.display = "none";
+      }
+    });
+  }
+
+  // Register service worker for PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      console.log('ServiceWorker 註冊成功:', registration.scope);
+    }).catch(function(error) {
+      console.log('ServiceWorker 註冊失敗:', error);
+    });
+  }
+</script>
+
+</body>
+</html>
