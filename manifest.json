@@ -1,14 +1,20 @@
-
 {
-  "name": "髮型資料庫",
-  "short_name": "髮型資料庫",
-  "start_url": "./pwa_hairstyle.html",
+  "name": "Hsin HairSnap",
+  "short_name": "HairSnap",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#121212",
-  "icons": [{
-    "src": "https://cdn-icons-png.flaticon.com/512/3064/3064171.png",
-    "sizes": "192x192",
-    "type": "image/png"
-  }]
+  "icons": [
+    {
+      "src": "favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
